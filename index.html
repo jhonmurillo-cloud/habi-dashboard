@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habi · Panel de gestión — Septiembre 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple-900:#2E1065;--purple-700:#5B21B6;--purple-600:#6D28D9;--purple-500:#8B5CF6;
+  --purple-100:#EFE7FB;--coral-500:#FF6F52;--coral-100:#FFE4DC;
+  --mint-500:#1FAE8A;--mint-100:#DCF5EE;--amber-500:#E8A324;--amber-100:#FCEECB;
+  --bg:#FAF8FC;--surface:#FFFFFF;--ink-900:#1B1330;--ink-600:#4A4359;
+  --ink-400:#8C8399;--line:#E9E2F4;--radius-lg:20px;--radius-sm:8px;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;background:var(--bg);color:var(--ink-900);
+  font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1280px;margin:0 auto;padding:28px 24px 80px;}
+
+/* ========== Header ========== */
+header{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  flex-wrap:wrap;gap:16px;margin-bottom:22px;
+}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand-mark{
+  width:40px;height:40px;border-radius:11px;
+  background:linear-gradient(135deg,var(--purple-700),var(--purple-500));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:17px;
+}
+.brand-text h1{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:19px;font-weight:600;margin:0;line-height:1.2;
+}
+.brand-text p{margin:2px 0 0;font-size:13px;color:var(--ink-400);}
+.corte-box{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius-sm);padding:10px 16px;
+  text-align:right;min-width:220px;
+}
+.corte-box .label{font-size:11px;color:var(--ink-400);}
+.corte-box .date{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;margin-top:2px;}
+
+/* ========== Tabs ========== */
+.tabs{
+  display:flex;gap:0;margin-bottom:20px;
+  border-bottom:1px solid var(--line);flex-wrap:wrap;
+}
+.tab-btn{
+  font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;
+  background:none;border:none;padding:11px 6px;margin-right:22px;
+  color:var(--ink-400);cursor:pointer;position:relative;top:1px;white-space:nowrap;
+}
+.tab-btn:hover{color:var(--purple-700);}
+.tab-btn.active{color:var(--purple-900);}
+.tab-btn.active::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:2.5px;
+  background:var(--purple-700);border-radius:2px 2px 0 0;
+}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ========== Hero ========== */
+.hero{
+  background:linear-gradient(120deg,var(--purple-900) 0%, var(--purple-700) 62%, var(--purple-600) 100%);
+  border-radius:24px;padding:32px;color:#fff;
+  display:grid;grid-template-columns:1.1fr 1.5fr;gap:32px;
+  box-shadow:0 20px 45px -22px rgba(46,16,101,0.55);
+  margin-bottom:22px;
+}
+.hero-gauge{display:flex;align-items:center;gap:20px;}
+.hero-gauge .g-label{font-size:12px;color:rgba(255,255,255,0.65);margin:0 0 4px;}
+.hero-gauge .g-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:38px;margin:0;}
+.hero-gauge .g-sub{font-size:12.5px;color:rgba(255,255,255,0.75);margin-top:6px;line-height:1.5;}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-content:center;
+}
+.hstat .h-label{font-size:11.5px;color:rgba(255,255,255,0.6);margin:0 0 6px;}
+.hstat .h-val{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px;margin:0;}
+.hstat .h-delta{font-size:11.5px;margin-top:4px;color:rgba(255,255,255,0.75);}
+
+/* ========== KPI Strip ========== */
+.kpi-strip{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px;
+}
+.kpi{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:14px;padding:16px 18px;
+}
+.kpi .k-icon{font-size:17px;}
+.kpi .k-label{font-size:12px;color:var(--ink-400);margin:8px 0 4px;}
+.kpi .k-val{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px;}
+.kpi.good .k-val{color:var(--mint-500);}
+.kpi.warn .k-val{color:var(--amber-500);}
+.kpi.bad .k-val{color:var(--coral-500);}
+
+/* ========== Columns ========== */
+.cols{
+  display:grid;grid-template-columns:1.5fr 1fr;gap:18px;
+  margin-bottom:18px;align-items:start;
+}
+.panel{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:22px;
+}
+.panel h2{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:15.5px;font-weight:600;margin:0 0 2px;
+}
+.panel .sub{font-size:12.5px;color:var(--ink-400);margin:0 0 18px;}
+
+/* ========== Tables ========== */
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead{background:var(--purple-100);}
+th{
+  background:var(--purple-100);color:var(--purple-900);
+  text-align:right;padding:11px 12px;font-size:12px;font-weight:600;
+}
+th:first-child{text-align:left;}
+td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:right;}
+td:first-child{text-align:left;font-weight:500;}
+tr.total td{background:var(--purple-100);font-weight:700;color:var(--purple-900);}
+tr.pending td{color:var(--ink-400);font-style:italic;}
+
+/* ========== Rankings & Lists ========== */
+.rank-row{
+  display:grid;grid-template-columns:24px 1fr auto 50px;
+  align-items:center;gap:10px;padding:10px 0;
+  border-bottom:1px solid var(--line);font-size:13.5px;
+}
+.rank-row:last-child{border-bottom:none;}
+.rank-row .rn{color:var(--ink-400);font-size:12px;font-weight:600;}
+.rank-row .rname{font-weight:500;}
+.rank-row .rval{font-family:'Space Grotesk',sans-serif;font-weight:600;}
+.rank-row.good .rval{color:var(--mint-500);}
+.rank-row.warn .rval{color:var(--amber-500);}
+.rank-row.bad .rval{color:var(--coral-500);}
+
+/* ========== Responsive ========== */
+@media(max-width:900px){
+  .hero,.cols{grid-template-columns:1fr;}
+  .kpi-strip{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:600px){
+  .kpi-strip{grid-template-columns:1fr;}
+  .wrap{padding:18px 12px 60px;}
+  .tabs{gap:12px;flex-wrap:nowrap;overflow-x:auto;}
+}
+
+/* ========== Extras ========== */
+.legend{display:flex;gap:16px;margin-bottom:10px;}
+.legend span{font-size:12px;color:var(--ink-600);display:flex;align-items:center;gap:6px;}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block;}
+.note{font-size:12px;color:var(--ink-600);background:var(--purple-100);
+  border:1px dashed var(--purple-700);padding:14px 16px;
+  border-radius:12px;margin-top:20px;}
+.status-badge{
+  display:inline-block;padding:4px 10px;border-radius:12px;
+  font-size:11px;font-weight:600;
+}
+.status-good{background:var(--mint-100);color:var(--mint-500);}
+.status-warn{background:var(--amber-100);color:var(--amber-500);}
+.status-bad{background:var(--coral-100);color:var(--coral-500);}
+
+.bar-container{margin:16px 0;}
+.bar-row{display:grid;grid-template-columns:100px 1fr 60px;
+  align-items:center;gap:12px;margin-bottom:12px;font-size:12px;}
+.bar-track{height:8px;background:var(--line);border-radius:6px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:6px;}
+.fill-mint{background:var(--mint-500);}
+.fill-coral{background:var(--coral-500);}
+.fill-purple{background:var(--purple-500);}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="brand-mark">H</div>
+      <div class="brand-text">
+        <h1>Habi · Panel de gestión</h1>
+        <p>Seguimiento operativo septiembre 2026</p>
+      </div>
+    </div>
+    <div class="corte-box">
+      <div class="label">Fecha de corte</div>
+      <div class="date" id="corteDate">15 de septiembre, 2026</div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="resumen">📊 Resumen general</button>
+    <button class="tab-btn" data-tab="agentes-detalle">👤 Agentes detalle</button>
+    <button class="tab-btn" data-tab="corte">⏱️ Corte diario</button>
+    <button class="tab-btn" data-tab="agentes">👥 Ranking agentes</button>
+    <button class="tab-btn" data-tab="skills">🎯 Front & Scraping</button>
+    <button class="tab-btn" data-tab="semanal">📈 Semanal</button>
+  </nav>
+
+  <!-- ============= TAB: RESUMEN GENERAL ============= -->
+  <div class="tab-panel active" id="tab-resumen">
+    <div class="hero">
+      <div class="hero-gauge">
+        <div>
+          <p class="g-label">CUMPLIMIENTO ACUMULADO</p>
+          <p class="g-num" id="cumplPct">92%</p>
+          <p class="g-sub" id="cumplText">2.452 completados de 2.667 esperados</p>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat">
+          <p class="h-label">Meta mensual</p>
+          <p class="h-val" id="metaMensual">12.000</p>
+        </div>
+        <div class="hstat">
+          <p class="h-label">Acumulado a la fecha</p>
+          <p class="h-val" id="acumulado">7.200</p>
+        </div>
+        <div class="hstat">
+          <p class="h-label">Proyección cierre</p>
+          <p class="h-val" id="proyeccion">9.800</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-strip">
+      <div class="kpi good">
+        <div class="k-icon">🎯</div>
+        <div class="k-label">Front cumplimiento</div>
+        <div class="k-val">94%</div>
+      </div>
+      <div class="kpi good">
+        <div class="k-icon">🔍</div>
+        <div class="k-label">Scraping cumplimiento</div>
+        <div class="k-val">91%</div>
+      </div>
+      <div class="kpi warn">
+        <div class="k-icon">👥</div>
+        <div class="k-label">Agentes en riesgo</div>
+        <div class="k-val">3</div>
+      </div>
+      <div class="kpi good">
+        <div class="k-icon">✅</div>
+        <div class="k-label">Agentes en meta</div>
+        <div class="k-val">13</div>
+      </div>
+      <div class="kpi">
+        <div class="k-icon">📅</div>
+        <div class="k-label">Días transcurridos</div>
+        <div class="k-val">10 / 22</div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="panel">
+        <h2>Detalle acumulado por skill</h2>
+        <p class="sub">Volumen completado y meta esperada a la fecha.</p>
+        <table>
+          <thead><tr><th>Skill</th><th>Meta</th><th>Completado</th><th>Faltan</th><th>Cumpl.</th></tr></thead>
+          <tbody>
+            <tr><td>Front</td><td>3.600</td><td>3.384</td><td>216</td><td class="good">94%</td></tr>
+            <tr><td>Scraping</td><td>4.067</td><td>3.696</td><td>371</td><td class="good">91%</td></tr>
+            <tr class="total"><td>Total</td><td>7.667</td><td>7.080</td><td>587</td><td>92%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h2>Estado de agentes</h2>
+        <p class="sub">Distribución por cumplimiento.</p>
+        <div class="rank-row good">
+          <span class="rn">🟢</span><span class="rname">En meta (≥95%)</span>
+          <span></span><span class="rval">10</span>
+        </div>
+        <div class="rank-row warn">
+          <span class="rn">🟡</span><span class="rname">En riesgo (75-94%)</span>
+          <span></span><span class="rval">4</span>
+        </div>
+        <div class="rank-row bad">
+          <span class="rn">🔴</span><span class="rname">Por debajo (&lt;75%)</span>
+          <span></span><span class="rval">2</span>
+        </div>
+        <div class="rank-row">
+          <span class="rn">—</span><span class="rname">Ausentes/permisos</span>
+          <span></span><span class="rval">1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============= TAB: AGENTES DETALLE ============= -->
+  <div class="tab-panel" id="tab-agentes-detalle">
+    <div class="panel">
+      <h2>Selector de agente</h2>
+      <p class="sub">Elige un agente para ver su seguimiento diario, semanal y mensual con metas.</p>
+      <select id="agenteSelector" style="width:100%;padding:10px;font-size:14px;border:1px solid var(--line);border-radius:8px;margin-bottom:20px;">
+        <option value="">— Selecciona un agente —</option>
+      </select>
+    </div>
+
+    <!-- Detalle mes actual -->
+    <div id="agenteDetalleContainer" style="display:none;">
+      <div class="panel">
+        <h2 id="agenteName">Agente — Septiembre 2026</h2>
+        <p class="sub">Resumen de cumplimiento del mes en curso.</p>
+        <table>
+          <thead><tr><th>Métrica</th><th>Meta</th><th>Realizado</th><th>Faltan</th><th>Cumplimiento</th></tr></thead>
+          <tbody>
+            <tr><td>Front</td><td id="mesMetaFront">163</td><td id="mesRealFront">152</td><td id="mesFaltaFront">11</td><td id="mesCumplFront" class="good">93%</td></tr>
+            <tr><td>Scraping</td><td id="mesMetaScrap">382</td><td id="mesRealScrap">349</td><td id="mesFaltaScrap">33</td><td id="mesCumplScrap" class="good">91%</td></tr>
+            <tr class="total"><td><b>Total</b></td><td id="mesMetaTotal">545</td><td id="mesRealTotal">501</td><td id="mesFaltaTotal">44</td><td id="mesCumplTotal" class="good">92%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Seguimiento semanal -->
+      <div class="cols">
+        <div class="panel" style="grid-column: 1/-1;">
+          <h2>Seguimiento semanal</h2>
+          <p class="sub">Acumulado por semana laboral (lunes a viernes).</p>
+          <table id="tablaSemanasAgente">
+            <thead><tr><th>Semana</th><th>Período</th><th>Front meta</th><th>Front real</th><th>Front %</th><th>Scraping meta</th><th>Scraping real</th><th>Scraping %</th><th>Total %</th></tr></thead>
+            <tbody id="semanasBody">
+              <!-- Se llena con JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Seguimiento diario -->
+      <div class="panel">
+        <h2>Seguimiento diario</h2>
+        <p class="sub">Día a día con metas y cumplimiento acumulado.</p>
+        <table id="tablaDiasAgente" style="font-size:12px;">
+          <thead><tr><th>Día</th><th>Fecha</th><th>Asist.</th><th>Front meta</th><th>Front real</th><th>Scrap meta</th><th>Scrap real</th><th>Total</th><th>Meta día</th><th>Cumpl.</th><th>Acum. %</th></tr></thead>
+          <tbody id="diasBody">
+            <!-- Se llena con JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="noAgenteMsg" class="note">
+      Selecciona un agente en el dropdown de arriba para ver su detalle completo de seguimiento diario, semanal y mensual.
+    </div>
+  </div>
+
+  <!-- ============= TAB: CORTE DIARIO ============= -->
+  <div class="tab-panel" id="tab-corte">
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="k-icon">📊</div>
+        <div class="k-label">Meta diaria</div>
+        <div class="k-val" id="metaDia">550</div>
+      </div>
+      <div class="kpi good">
+        <div class="k-icon">✅</div>
+        <div class="k-label">Completado hoy</div>
+        <div class="k-val" id="completoHoy">487</div>
+      </div>
+      <div class="kpi warn">
+        <div class="k-icon">⏳</div>
+        <div class="k-label">Falta para meta</div>
+        <div class="k-val" id="faltaHoy">63</div>
+      </div>
+      <div class="kpi">
+        <div class="k-icon">👥</div>
+        <div class="k-label">Agentes conectados</div>
+        <div class="k-val">14 / 17</div>
+      </div>
+      <div class="kpi">
+        <div class="k-icon">🎯</div>
+        <div class="k-label">Meta por agente</div>
+        <div class="k-val" id="metaAgente">32</div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="panel">
+        <h2>Cumplimiento del corte</h2>
+        <p class="sub">Avance hora a hora (últimas 24 horas).</p>
+        <table>
+          <thead><tr><th>Hora</th><th>Front</th><th>Scraping</th><th>Total</th><th>Meta acum.</th><th>Real acum.</th><th>Cumpl.</th></tr></thead>
+          <tbody>
+            <tr><td>08:00</td><td>12</td><td>18</td><td>30</td><td>30</td><td>30</td><td class="good">100%</td></tr>
+            <tr><td>09:00</td><td>11</td><td>22</td><td>33</td><td>63</td><td>63</td><td class="good">100%</td></tr>
+            <tr><td>10:00</td><td>14</td><td>19</td><td>33</td><td>96</td><td>96</td><td class="good">100%</td></tr>
+            <tr><td>11:00</td><td>13</td><td>20</td><td>33</td><td>129</td><td>129</td><td class="good">100%</td></tr>
+            <tr><td>12:00</td><td>12</td><td>21</td><td>33</td><td>162</td><td>162</td><td class="good">100%</td></tr>
+            <tr><td>13:00</td><td>10</td><td>15</td><td>25</td><td>195</td><td>187</td><td class="warn">96%</td></tr>
+            <tr><td>14:00</td><td>11</td><td>19</td><td>30</td><td>228</td><td>217</td><td class="warn">95%</td></tr>
+            <tr class="total"><td>Acum. (14:00)</td><td>93</td><td>134</td><td>227</td><td>—</td><td>—</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h2>Detalle por skill (hoy)</h2>
+        <p class="sub">Comparativa Front vs Scraping.</p>
+        <div class="rank-row">
+          <span class="rn">F</span><span class="rname"><b>Front</b></span>
+          <span></span><span class="rval">93 de 150</span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-row">
+            <span>Completado</span>
+            <div class="bar-track"><div class="bar-fill fill-coral" style="width:62%"></div></div>
+            <span class="rval">62%</span>
+          </div>
+        </div>
+        <div class="rank-row" style="margin-top:20px;">
+          <span class="rn">S</span><span class="rname"><b>Scraping</b></span>
+          <span></span><span class="rval">134 de 400</span>
+        </div>
+        <div class="bar-container">
+          <div class="bar-row">
+            <span>Completado</span>
+            <div class="bar-track"><div class="bar-fill fill-purple" style="width:34%"></div></div>
+            <span class="rval">34%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Lectura rápida del corte:</b> Mañana a primera hora revisa si hay desviación en los primeros bloques. Scraping acumula más volumen pero tiende a concentrarse en las tardes. Front mantiene ritmo constante.
+    </div>
+  </div>
+
+  <!-- ============= TAB: AGENTES ============= -->
+  <div class="tab-panel" id="tab-agentes">
+    <div class="panel">
+      <h2>Top agentes por cumplimiento mensual</h2>
+      <p class="sub">Ranking de agentes con mejor desempeño acumulado (a la fecha).</p>
+      <table>
+        <thead><tr><th>Agente</th><th>Acum.</th><th>Meta esp.</th><th>Cumpl.</th><th>Estado</th><th>Skill</th></tr></thead>
+        <tbody id="agentesTable">
+          <tr><td>Laura Tatiana Marín</td><td>245</td><td>248</td><td class="good">99%</td><td><span class="status-badge status-good">✅ En meta</span></td><td>Scraping</td></tr>
+          <tr><td>Dayana Agredo</td><td>238</td><td>248</td><td class="good">96%</td><td><span class="status-badge status-good">✅ En meta</span></td><td>Front</td></tr>
+          <tr><td>Michell Morales Villegas</td><td>231</td><td>248</td><td class="good">93%</td><td><span class="status-badge status-warn">⚠️ En riesgo</span></td><td>Scraping</td></tr>
+          <tr><td>Mauricio Pacichana</td><td>229</td><td>248</td><td class="good">92%</td><td><span class="status-badge status-warn">⚠️ En riesgo</span></td><td>Front</td></tr>
+          <tr><td>Maria Camila Castaño</td><td>225</td><td>248</td><td class="warn">91%</td><td><span class="status-badge status-warn">⚠️ En riesgo</span></td><td>Scraping</td></tr>
+          <tr><td>Mario Rios</td><td>218</td><td>248</td><td class="warn">88%</td><td><span class="status-badge status-warn">⚠️ En riesgo</span></td><td>Front</td></tr>
+          <tr><td>Jhon Angulo</td><td>205</td><td>248</td><td class="bad">83%</td><td><span class="status-badge status-bad">🔴 Por debajo</span></td><td>Scraping</td></tr>
+          <tr><td>Alejandro Ramirez</td><td>198</td><td>248</td><td class="bad">80%</td><td><span class="status-badge status-bad">🔴 Por debajo</span></td><td>Front</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cols">
+      <div class="panel">
+        <h2>Productividad individual (últimas 3 días)</h2>
+        <p class="sub">Tendencia reciente de los top performers.</p>
+        <div class="bar-container">
+          <div class="bar-row"><span>Laura Marín</span><div class="bar-track"><div class="bar-fill fill-mint" style="width:96%"></div></div><b>96</b></div>
+          <div class="bar-row"><span>Dayana Agredo</span><div class="bar-track"><div class="bar-fill fill-mint" style="width:93%"></div></div><b>93</b></div>
+          <div class="bar-row"><span>Michell Morales</span><div class="bar-track"><div class="bar-fill fill-coral" style="width:87%"></div></div><b>87</b></div>
+          <div class="bar-row"><span>Mauricio Pach.</span><div class="bar-track"><div class="bar-fill fill-coral" style="width:85%"></div></div><b>85</b></div>
+          <div class="bar-row"><span>Maria Camila</span><div class="bar-track"><div class="bar-fill fill-coral" style="width:82%"></div></div><b>82</b></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Indicadores por agente</h2>
+        <p class="sub">Estado general del equipo.</p>
+        <div class="rank-row good">
+          <span class="rn">✅</span><span class="rname">En meta (≥95%)</span>
+          <span></span><span class="rval">10 agentes</span>
+        </div>
+        <div class="rank-row warn">
+          <span class="rn">⚠️</span><span class="rname">En riesgo (75-94%)</span>
+          <span></span><span class="rval">4 agentes</span>
+        </div>
+        <div class="rank-row bad">
+          <span class="rn">🔴</span><span class="rname">Por debajo (&lt;75%)</span>
+          <span></span><span class="rval">2 agentes</span>
+        </div>
+        <div class="rank-row">
+          <span class="rn">—</span><span class="rname">Ausentes/Incapacidad</span>
+          <span></span><span class="rval">1 agente</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============= TAB: SKILLS ============= -->
+  <div class="tab-panel" id="tab-skills">
+    <div class="hero">
+      <div class="hero-gauge">
+        <div>
+          <p class="g-label">DESEMPEÑO GENERAL POR SKILL</p>
+          <p class="g-num">92%</p>
+          <p class="g-sub">Front 94% · Scraping 91%</p>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat">
+          <p class="h-label">Front gestionados</p>
+          <p class="h-val">3.384</p>
+        </div>
+        <div class="hstat">
+          <p class="h-label">Scraping gestionados</p>
+          <p class="h-val">3.696</p>
+        </div>
+        <div class="hstat">
+          <p class="h-label">Total completados</p>
+          <p class="h-val">7.080</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div class="panel">
+        <h2>Front · Efectividad y contactabilidad</h2>
+        <p class="sub">Skill enfocado en generación de contactos.</p>
+        <table>
+          <thead><tr><th>Métrica</th><th>Valor</th><th>Meta esp.</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>Base recibida</td><td>3.606</td><td>—</td><td>—</td></tr>
+            <tr><td>Gestionados</td><td>3.384</td><td>3.600</td><td class="good">94%</td></tr>
+            <tr><td>Contactados</td><td>3.112</td><td>2.700</td><td class="good">115%</td></tr>
+            <tr class="total"><td>Efectividad</td><td colspan="2">94%</td><td class="good">✅</td></tr>
+          </tbody>
+        </table>
+        <div class="legend">
+          <span><i class="fill-coral"></i>Gestionado</span>
+          <span><i class="fill-mint"></i>Contactado</span>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Scraping · Volumen y efectividad</h2>
+        <p class="sub">Skill de alto volumen con requerimiento de precisión.</p>
+        <table>
+          <thead><tr><th>Métrica</th><th>Valor</th><th>Meta esp.</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>Base recibida</td><td>4.061</td><td>—</td><td>—</td></tr>
+            <tr><td>Gestionados</td><td>4.061</td><td>4.061</td><td class="good">100%</td></tr>
+            <tr><td>Gestionados (comp.)</td><td>3.696</td><td>4.067</td><td class="good">91%</td></tr>
+            <tr class="total"><td>Efectividad</td><td colspan="2">100%</td><td class="good">✅</td></tr>
+          </tbody>
+        </table>
+        <div class="legend">
+          <span><i class="fill-purple"></i>Completado</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Seguimiento semanal por skill</h2>
+      <p class="sub">Cumplimiento contra meta por semana (meta diaria × días hábiles).</p>
+      <table>
+        <thead><tr><th>Semana</th><th>Front meta</th><th>Front real</th><th>Front %</th><th>Scraping meta</th><th>Scraping real</th><th>Scraping %</th></tr></thead>
+        <tbody>
+          <tr><td>1 (Sep 1-5)</td><td>1.800</td><td>1.680</td><td class="good">93%</td><td>2.000</td><td>1.820</td><td class="good">91%</td></tr>
+          <tr><td>2 (Sep 8-12)</td><td>1.800</td><td>1.704</td><td class="good">95%</td><td>2.000</td><td>1.876</td><td class="good">94%</td></tr>
+          <tr class="total"><td>Acumulado (10 días)</td><td>3.600</td><td>3.384</td><td class="good">94%</td><td>4.000</td><td>3.696</td><td class="good">92%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ============= TAB: SEMANAL ============= -->
+  <div class="tab-panel" id="tab-semanal">
+    <div class="panel">
+      <h2>Proyecciones y análisis semanal</h2>
+      <p class="sub">Avance esperado vs. proyectado al cierre del mes.</p>
+      <table>
+        <thead><tr><th>Indicador</th><th>Esperado a la fecha</th><th>Completado real</th><th>Diferencia</th><th>Proyección cierre</th></tr></thead>
+        <tbody>
+          <tr><td>Meta acumulada</td><td>7.667</td><td>7.080</td><td>-587</td><td>9.800</td></tr>
+          <tr><td>Front</td><td>3.600</td><td>3.384</td><td>-216</td><td>4.680</td></tr>
+          <tr><td>Scraping</td><td>4.067</td><td>3.696</td><td>-371</td><td>5.120</td></tr>
+          <tr class="total"><td>Cumplimiento %</td><td>—</td><td>92%</td><td>—</td><td>82%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cols">
+      <div class="panel">
+        <h2>Tendencia de cumplimiento</h2>
+        <p class="sub">Variación diaria del cumplimiento acumulado vs. esperado.</p>
+        <div class="bar-container">
+          <div class="bar-row"><span>Sep 1</span><div class="bar-track"><div class="bar-fill fill-mint" style="width:95%"></div></div><b>95%</b></div>
+          <div class="bar-row"><span>Sep 2</span><div class="bar-track"><div class="bar-fill fill-mint" style="width:94%"></div></div><b>94%</b></div>
+          <div class="bar-row"><span>Sep 3</span><div class="bar-track"><div class="bar-fill fill-mint" style="width:93%"></div></div><b>93%</b></div>
+          <div class="bar-row"><span>Sep 4</span><div class="bar-track"><div class="bar-fill fill-mint" style="width:92%"></div></div><b>92%</b></div>
+          <div class="bar-row"><span>Sep 5</span><div class="bar-track"><div class="bar-fill fill-mint" style="width:92%"></div></div><b>92%</b></div>
+          <div class="bar-row"><span>Sep 8</span><div class="bar-track"><div class="bar-fill fill-mint" style="width:92%"></div></div><b>92%</b></div>
+          <div class="bar-row"><span>Sep 9</span><div class="bar-track"><div class="bar-fill fill-mint" style="width:92%"></div></div><b>92%</b></div>
+          <div class="bar-row"><span>Sep 10</span><div class="bar-track"><div class="bar-fill fill-mint" style="width:92%"></div></div><b>92%</b></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Recomendaciones de acción</h2>
+        <p class="sub">Estado y próximas acciones recomendadas.</p>
+        <div class="rank-row good">
+          <span class="rn">✅</span><span class="rname">Cumplimiento general</span>
+          <span></span><span class="rval">92% (En línea)</span>
+        </div>
+        <div class="rank-row">
+          <span class="rn">📈</span><span class="rname">Tendencia</span>
+          <span></span><span class="rval">Estable (→)</span>
+        </div>
+        <div class="rank-row warn">
+          <span class="rn">⚠️</span><span class="rname">Brecha acumulada</span>
+          <span></span><span class="rval">587 unidades</span>
+        </div>
+        <div class="rank-row">
+          <span class="rn">🎯</span><span class="rname">Foco para cierre</span>
+          <span></span><span class="rval">Agentes en riesgo (4)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>Análisis semanal:</b> El equipo mantiene cumplimiento estable en 92%. La brecha acumulada es de 587 unidades (9.1% de diferencia). Si se mantiene el ritmo actual, se proyecta cierre en 9.800 unidades (82% de la meta). Se recomienda foco en 4 agentes en riesgo y validar disponibilidad de base para finales de mes.
+    </div>
+  </div>
+</div>
+
+<script>
+// Datos de agentes con seguimiento diario, semanal y mensual
+const agentsData = {
+  "Laura Tatiana Marín": {
+    skill: "Scraping",
+    dias: [
+      {fecha: "2026-09-01", dia: "Mar", presente: 1, front: 0, scrap: 25},
+      {fecha: "2026-09-02", dia: "Mié", presente: 1, front: 0, scrap: 28},
+      {fecha: "2026-09-03", dia: "Jue", presente: 1, front: 0, scrap: 26},
+      {fecha: "2026-09-04", dia: "Vie", presente: 1, front: 0, scrap: 27},
+      {fecha: "2026-09-07", dia: "Lun", presente: 1, front: 0, scrap: 30},
+      {fecha: "2026-09-08", dia: "Mar", presente: 1, front: 0, scrap: 29},
+      {fecha: "2026-09-09", dia: "Mié", presente: 1, front: 0, scrap: 25},
+      {fecha: "2026-09-10", dia: "Jue", presente: 1, front: 0, scrap: 28},
+      {fecha: "2026-09-11", dia: "Vie", presente: 1, front: 0, scrap: 26},
+      {fecha: "2026-09-14", dia: "Lun", presente: 1, front: 0, scrap: 0},
+    ]
+  },
+  "Dayana Agredo": {
+    skill: "Front",
+    dias: [
+      {fecha: "2026-09-01", dia: "Mar", presente: 1, front: 14, scrap: 0},
+      {fecha: "2026-09-02", dia: "Mié", presente: 1, front: 15, scrap: 0},
+      {fecha: "2026-09-03", dia: "Jue", presente: 1, front: 13, scrap: 0},
+      {fecha: "2026-09-04", dia: "Vie", presente: 1, front: 12, scrap: 0},
+      {fecha: "2026-09-07", dia: "Lun", presente: 1, front: 15, scrap: 0},
+      {fecha: "2026-09-08", dia: "Mar", presente: 1, front: 14, scrap: 0},
+      {fecha: "2026-09-09", dia: "Mié", presente: 1, front: 16, scrap: 0},
+      {fecha: "2026-09-10", dia: "Jue", presente: 1, front: 13, scrap: 0},
+      {fecha: "2026-09-11", dia: "Vie", presente: 1, front: 14, scrap: 0},
+      {fecha: "2026-09-14", dia: "Lun", presente: 1, front: 0, scrap: 0},
+    ]
+  },
+  "Michell Morales Villegas": {
+    skill: "Scraping",
+    dias: [
+      {fecha: "2026-09-01", dia: "Mar", presente: 1, front: 0, scrap: 22},
+      {fecha: "2026-09-02", dia: "Mié", presente: 1, front: 0, scrap: 24},
+      {fecha: "2026-09-03", dia: "Jue", presente: 1, front: 0, scrap: 21},
+      {fecha: "2026-09-04", dia: "Vie", presente: 1, front: 0, scrap: 23},
+      {fecha: "2026-09-07", dia: "Lun", presente: 1, front: 0, scrap: 25},
+      {fecha: "2026-09-08", dia: "Mar", presente: 1, front: 0, scrap: 24},
+      {fecha: "2026-09-09", dia: "Mié", presente: 0, front: 0, scrap: 0},
+      {fecha: "2026-09-10", dia: "Jue", presente: 1, front: 0, scrap: 22},
+      {fecha: "2026-09-11", dia: "Vie", presente: 1, front: 0, scrap: 20},
+      {fecha: "2026-09-14", dia: "Lun", presente: 1, front: 0, scrap: 0},
+    ]
+  },
+  "Mauricio Pacichana": {
+    skill: "Front",
+    dias: [
+      {fecha: "2026-09-01", dia: "Mar", presente: 1, front: 12, scrap: 0},
+      {fecha: "2026-09-02", dia: "Mié", presente: 1, front: 13, scrap: 0},
+      {fecha: "2026-09-03", dia: "Jue", presente: 1, front: 11, scrap: 0},
+      {fecha: "2026-09-04", dia: "Vie", presente: 1, front: 12, scrap: 0},
+      {fecha: "2026-09-07", dia: "Lun", presente: 1, front: 14, scrap: 0},
+      {fecha: "2026-09-08", dia: "Mar", presente: 1, front: 13, scrap: 0},
+      {fecha: "2026-09-09", dia: "Mié", presente: 1, front: 12, scrap: 0},
+      {fecha: "2026-09-10", dia: "Jue", presente: 1, front: 11, scrap: 0},
+      {fecha: "2026-09-11", dia: "Vie", presente: 1, front: 13, scrap: 0},
+      {fecha: "2026-09-14", dia: "Lun", presente: 1, front: 0, scrap: 0},
+    ]
+  },
+  "Maria Camila Castaño": {
+    skill: "Scraping",
+    dias: [
+      {fecha: "2026-09-01", dia: "Mar", presente: 1, front: 0, scrap: 24},
+      {fecha: "2026-09-02", dia: "Mié", presente: 1, front: 0, scrap: 26},
+      {fecha: "2026-09-03", dia: "Jue", presente: 1, front: 0, scrap: 23},
+      {fecha: "2026-09-04", dia: "Vie", presente: 0, front: 0, scrap: 0},
+      {fecha: "2026-09-07", dia: "Lun", presente: 1, front: 0, scrap: 25},
+      {fecha: "2026-09-08", dia: "Mar", presente: 1, front: 0, scrap: 27},
+      {fecha: "2026-09-09", dia: "Mié", presente: 1, front: 0, scrap: 24},
+      {fecha: "2026-09-10", dia: "Jue", presente: 1, front: 0, scrap: 22},
+      {fecha: "2026-09-11", dia: "Vie", presente: 1, front: 0, scrap: 23},
+      {fecha: "2026-09-14", dia: "Lun", presente: 1, front: 0, scrap: 0},
+    ]
+  },
+  "Mario Rios": {
+    skill: "Front",
+    dias: [
+      {fecha: "2026-09-01", dia: "Mar", presente: 1, front: 11, scrap: 0},
+      {fecha: "2026-09-02", dia: "Mié", presente: 1, front: 12, scrap: 0},
+      {fecha: "2026-09-03", dia: "Jue", presente: 1, front: 10, scrap: 0},
+      {fecha: "2026-09-04", dia: "Vie", presente: 1, front: 11, scrap: 0},
+      {fecha: "2026-09-07", dia: "Lun", presente: 1, front: 13, scrap: 0},
+      {fecha: "2026-09-08", dia: "Mar", presente: 1, front: 12, scrap: 0},
+      {fecha: "2026-09-09", dia: "Mié", presente: 1, front: 11, scrap: 0},
+      {fecha: "2026-09-10", dia: "Jue", presente: 1, front: 12, scrap: 0},
+      {fecha: "2026-09-11", dia: "Vie", presente: 1, front: 10, scrap: 0},
+      {fecha: "2026-09-14", dia: "Lun", presente: 1, front: 0, scrap: 0},
+    ]
+  },
+  "Jhon Angulo": {
+    skill: "Scraping",
+    dias: [
+      {fecha: "2026-09-01", dia: "Mar", presente: 1, front: 0, scrap: 20},
+      {fecha: "2026-09-02", dia: "Mié", presente: 1, front: 0, scrap: 19},
+      {fecha: "2026-09-03", dia: "Jue", presente: 1, front: 0, scrap: 18},
+      {fecha: "2026-09-04", dia: "Vie", presente: 1, front: 0, scrap: 19},
+      {fecha: "2026-09-07", dia: "Lun", presente: 1, front: 0, scrap: 21},
+      {fecha: "2026-09-08", dia: "Mar", presente: 1, front: 0, scrap: 20},
+      {fecha: "2026-09-09", dia: "Mié", presente: 1, front: 0, scrap: 18},
+      {fecha: "2026-09-10", dia: "Jue", presente: 0, front: 0, scrap: 0},
+      {fecha: "2026-09-11", dia: "Vie", presente: 1, front: 0, scrap: 17},
+      {fecha: "2026-09-14", dia: "Lun", presente: 1, front: 0, scrap: 0},
+    ]
+  },
+  "Alejandro Ramirez": {
+    skill: "Front",
+    dias: [
+      {fecha: "2026-09-01", dia: "Mar", presente: 1, front: 10, scrap: 0},
+      {fecha: "2026-09-02", dia: "Mié", presente: 1, front: 11, scrap: 0},
+      {fecha: "2026-09-03", dia: "Jue", presente: 1, front: 9, scrap: 0},
+      {fecha: "2026-09-04", dia: "Vie", presente: 0, front: 0, scrap: 0},
+      {fecha: "2026-09-07", dia: "Lun", presente: 1, front: 12, scrap: 0},
+      {fecha: "2026-09-08", dia: "Mar", presente: 1, front: 11, scrap: 0},
+      {fecha: "2026-09-09", dia: "Mié", presente: 1, front: 10, scrap: 0},
+      {fecha: "2026-09-10", dia: "Jue", presente: 1, front: 10, scrap: 0},
+      {fecha: "2026-09-11", dia: "Vie", presente: 1, front: 9, scrap: 0},
+      {fecha: "2026-09-14", dia: "Lun", presente: 1, front: 0, scrap: 0},
+    ]
+  }
+};
+
+// Metas diarias
+const metaDiaFront = 163.64;
+const metaDiaScrap = 381.82;
+
+// Funciones
+function formatNumber(n) {
+  return n.toLocaleString('es-CO');
+}
+
+function getStatusClass(pct) {
+  if (pct >= 95) return 'good';
+  if (pct >= 75) return 'warn';
+  return 'bad';
+}
+
+function renderAgentDetail(agentName) {
+  if (!agentName || !agentsData[agentName]) {
+    document.getElementById('agenteDetalleContainer').style.display = 'none';
+    document.getElementById('noAgenteMsg').style.display = 'block';
+    return;
+  }
+
+  document.getElementById('agenteDetalleContainer').style.display = 'block';
+  document.getElementById('noAgenteMsg').style.display = 'none';
+  
+  const agent = agentsData[agentName];
+  document.getElementById('agenteName').textContent = `${agentName} — Septiembre 2026 (${agent.skill})`;
+
+  // Calcular metas y reales
+  let totalFront = 0, totalScrap = 0;
+  let diasTrabajados = 0;
+
+  agent.dias.forEach(d => {
+    if (d.presente) diasTrabajados++;
+    totalFront += d.front;
+    totalScrap += d.scrap;
+  });
+
+  const metaFront = Math.round(metaDiaFront * diasTrabajados);
+  const metaScrap = Math.round(metaDiaScrap * diasTrabajados);
+  const metaTotal = metaFront + metaScrap;
+  const realTotal = totalFront + totalScrap;
+
+  // Actualizar tabla de mes
+  document.getElementById('mesMetaFront').textContent = formatNumber(metaFront);
+  document.getElementById('mesRealFront').textContent = formatNumber(totalFront);
+  document.getElementById('mesFaltaFront').textContent = formatNumber(Math.max(0, metaFront - totalFront));
+  const cumplFront = metaFront > 0 ? Math.round((totalFront / metaFront) * 100) : 0;
+  document.getElementById('mesCumplFront').textContent = cumplFront + '%';
+  document.getElementById('mesCumplFront').className = getStatusClass(cumplFront);
+
+  document.getElementById('mesMetaScrap').textContent = formatNumber(metaScrap);
+  document.getElementById('mesRealScrap').textContent = formatNumber(totalScrap);
+  document.getElementById('mesFaltaScrap').textContent = formatNumber(Math.max(0, metaScrap - totalScrap));
+  const cumplScrap = metaScrap > 0 ? Math.round((totalScrap / metaScrap) * 100) : 0;
+  document.getElementById('mesCumplScrap').textContent = cumplScrap + '%';
+  document.getElementById('mesCumplScrap').className = getStatusClass(cumplScrap);
+
+  document.getElementById('mesMetaTotal').textContent = formatNumber(metaTotal);
+  document.getElementById('mesRealTotal').textContent = formatNumber(realTotal);
+  document.getElementById('mesFaltaTotal').textContent = formatNumber(Math.max(0, metaTotal - realTotal));
+  const cumplTotal = metaTotal > 0 ? Math.round((realTotal / metaTotal) * 100) : 0;
+  document.getElementById('mesCumplTotal').textContent = cumplTotal + '%';
+  document.getElementById('mesCumplTotal').className = getStatusClass(cumplTotal);
+
+  // Tabla semanal
+  const semanas = [
+    {label: 'Semana 1', start: 0, end: 4, periodo: 'Sep 1-5'},
+    {label: 'Semana 2', start: 5, end: 9, periodo: 'Sep 8-12'},
+  ];
+
+  let semanasHtml = '';
+  semanas.forEach(w => {
+    const diasSem = agent.dias.slice(w.start, w.end + 1);
+    let semFront = 0, semScrap = 0, semDias = 0;
+    diasSem.forEach(d => {
+      if (d.presente) semDias++;
+      semFront += d.front;
+      semScrap += d.scrap;
+    });
+
+    const metaSemFront = Math.round(metaDiaFront * semDias);
+    const metaSemScrap = Math.round(metaDiaScrap * semDias);
+    const cumplSemFront = metaSemFront > 0 ? Math.round((semFront / metaSemFront) * 100) : 0;
+    const cumplSemScrap = metaSemScrap > 0 ? Math.round((semScrap / metaSemScrap) * 100) : 0;
+    const cumplSemTotal = (metaSemFront + metaSemScrap) > 0 ? Math.round(((semFront + semScrap) / (metaSemFront + metaSemScrap)) * 100) : 0;
+
+    semanasHtml += `
+      <tr>
+        <td>${w.label}</td><td>${w.periodo}</td>
+        <td>${formatNumber(metaSemFront)}</td><td>${formatNumber(semFront)}</td>
+        <td class="${getStatusClass(cumplSemFront)}">${cumplSemFront}%</td>
+        <td>${formatNumber(metaSemScrap)}</td><td>${formatNumber(semScrap)}</td>
+        <td class="${getStatusClass(cumplSemScrap)}">${cumplSemScrap}%</td>
+        <td class="${getStatusClass(cumplSemTotal)}"><b>${cumplSemTotal}%</b></td>
+      </tr>
+    `;
+  });
+  document.getElementById('semanasBody').innerHTML = semanasHtml;
+
+  // Tabla diaria
+  let diasHtml = '';
+  let acumFront = 0, acumScrap = 0, acumMeta = 0;
+
+  agent.dias.forEach((d, i) => {
+    acumFront += d.front;
+    acumScrap += d.scrap;
+
+    const metaDiaActual = (d.presente ? metaDiaFront : 0) + (d.presente ? metaDiaScrap : 0);
+    acumMeta += metaDiaActual;
+
+    const realDia = d.front + d.scrap;
+    const cumplDia = metaDiaActual > 0 ? Math.round((realDia / metaDiaActual) * 100) : 0;
+    const acumTotal = acumFront + acumScrap;
+    const cumplAcum = acumMeta > 0 ? Math.round((acumTotal / acumMeta) * 100) : 0;
+
+    diasHtml += `
+      <tr>
+        <td>${d.dia}</td><td>${d.fecha}</td>
+        <td>${d.presente ? '✅' : '❌'}</td>
+        <td>${d.presente ? Math.round(metaDiaFront) : '—'}</td><td>${d.front}</td>
+        <td>${d.presente ? Math.round(metaDiaScrap) : '—'}</td><td>${d.scrap}</td>
+        <td><b>${realDia}</b></td>
+        <td>${d.presente ? Math.round(metaDiaActual) : '—'}</td>
+        <td class="${getStatusClass(cumplDia)}">${cumplDia}%</td>
+        <td class="${getStatusClass(cumplAcum)}"><b>${cumplAcum}%</b></td>
+      </tr>
+    `;
+  });
+  document.getElementById('diasBody').innerHTML = diasHtml;
+}
+
+// Llenar selector
+const selector = document.getElementById('agenteSelector');
+Object.keys(agentsData).forEach(name => {
+  const opt = document.createElement('option');
+  opt.value = name;
+  opt.textContent = name;
+  selector.appendChild(opt);
+});
+
+selector.addEventListener('change', (e) => {
+  renderAgentDetail(e.target.value);
+});
+
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// Update dynamic values
+function updateDashboard() {
+  const metaMensual = 12000;
+  const diasTranscurridos = 10; // Sep 1-5 y Sep 8-10 (sin fin de semana)
+  const diasLaborales = 22;
+  const metaAcumuladaEsperada = Math.round((metaMensual / diasLaborales) * diasTranscurridos);
+  const completadoReal = 7080;
+  const cumplPct = Math.round((completadoReal / metaAcumuladaEsperada) * 100);
+  
+  document.getElementById('cumplPct').textContent = cumplPct + '%';
+  document.getElementById('cumplText').textContent = 
+    completadoReal.toLocaleString('es-CO') + ' completados de ' + 
+    metaAcumuladaEsperada.toLocaleString('es-CO') + ' esperados';
+  
+  document.getElementById('acumulado').textContent = completadoReal.toLocaleString('es-CO');
+  
+  const metaDia = Math.round(metaMensual / diasLaborales);
+  document.getElementById('metaDia').textContent = metaDia;
+  document.getElementById('metaAgente').textContent = Math.round(metaDia / 17);
+  
+  // Proyección simple: si en 10 días hizo 7080, en 22 días haría aprox
+  const tasaDiaria = completadoReal / diasTranscurridos;
+  const proyeccion = Math.round(tasaDiaria * diasLaborales);
+  document.getElementById('proyeccion').textContent = proyeccion.toLocaleString('es-CO');
+}
+
+updateDashboard();
+</script>
+</body>
+</html>
